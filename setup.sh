@@ -6,10 +6,10 @@
 set -e  # Exit on error
 
 # Configuration
-GITHUB_USER="orue"
-GITHUB_REPO="ubuntu-configuration"
+GITHUB_USER="YOUR_USERNAME"
+GITHUB_REPO="YOUR_REPO"
 GITHUB_BRANCH="main"
-BASE_URL="https://github.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}"
+BASE_URL="https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}"
 
 # Colors for output
 RED='\033[0;31m'
@@ -48,12 +48,23 @@ install_dotfile() {
     
     print_info "Downloading ${filename}..."
     
-    if curl -fsSL "$url" -o "$destination"; then
-        print_info "Successfully installed ${filename}"
-        return 0
+    # If GITHUB_TOKEN is set, use it for authentication
+    if [ -n "$GITHUB_TOKEN" ]; then
+        if curl -fsSL -H "Authorization: token ${GITHUB_TOKEN}" "$url" -o "$destination"; then
+            print_info "Successfully installed ${filename}"
+            return 0
+        else
+            print_error "Failed to download ${filename}"
+            return 1
+        fi
     else
-        print_error "Failed to download ${filename}"
-        return 1
+        if curl -fsSL "$url" -o "$destination"; then
+            print_info "Successfully installed ${filename}"
+            return 0
+        else
+            print_error "Failed to download ${filename}"
+            return 1
+        fi
     fi
 }
 
