@@ -124,6 +124,7 @@ sudo systemctl restart ssh
 ---
 
 ### Add .bashrc and .vimrc
+These optional `.bashrc` and `.vimrc` files offer a lightweight, minimalist setup designed to streamline everyday server administration and text editing tasks. They provide essential customizations without unnecessary complexity, making the command-line environment cleaner, faster, and more efficient for routine use.
 
 ```sh
 curl -sSL https://raw.githubusercontent.com/orue/ubuntu-configuration/main/setup.sh | bash
