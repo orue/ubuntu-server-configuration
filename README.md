@@ -9,7 +9,8 @@ Ubuntu Server is widely adopted for production environments thanks to its stabil
 ## Table of Contents
 
 - [Installation](#install-ubuntu-server-2404-lts-installation)
-- [Configuration Check List](#configuration-check-list)
+- [Configuration](#system-configuration)
+- [Add an admin user](#add-an-admin-user)
 - [Add .bashrc and .vimrc](#add-bashrc-and-vimrc)
 
 ### Install Ubuntu Server 24.04 LTS
@@ -20,15 +21,15 @@ Here is the official [Ubuntu Server Installation guide](https://ubuntu.com/tutor
 
 ---
 
-### Configuration Check List
+### System Configuration
 
-[] Update software
+Update software:
 
 ```sh
 sudo apt update; sudo apt upgrade -y; sudo apt autoremove -y
 ```
 
-[] Restart your server
+Restart your server:
 
 ```sh
 sudo shutdown now -r
@@ -36,36 +37,40 @@ sudo shutdown now -r
 
 ---
 
+### Add an admin user
+
 **Note:** This applies only if you are using Cloud providers.
 Local servers, the **user** is created during the installation process.
 
-[] Create a new user
+Create a new user:
 
 ```bash
- adduser $USERNAME
+adduser $USERNAME
 ```
 
-[] Add the user to the "sudo group"
+Add the user to the "sudo group":
 
 ```sh
 usermod -aG sudo $USERNAME
 ```
 
-[] Switch user
+Switch user:
 
 ```sh
 su $USERNAME
 ```
 
-[] Check sudo access
+Check sudo access:
 
 ```sh
 sudo cat /var/log/auth.log
 ```
 
+---
+
 **Add an SSH key for the newly created user.**
 
-[] sudo into the new user and change to the home directory, and create a .ssh directory if it doesn't exist.
+sudo into the new user and change to the home directory, and create a .ssh directory if it doesn't exist:
 
 ```sh
 su $USERNAME
@@ -74,7 +79,7 @@ mkdir -p ~/.ssh
 cd ~/.ssh
 ```
 
-[] Create a file named **authorized_keys** and paste the public key
+Create a file named **authorized_keys** and paste the public key:
 
 ```sh
 vi ~/.ssh/authorized_keys
@@ -92,37 +97,25 @@ ssh-copy-id -i ~/.ssh/id_rsa.pub user@remote-host
 
 **Note:** Before disabling root, check that you can SSH with the new user.
 
-[] Change file permissions for the **authorized_keys** file
+Change file permissions for the **authorized_keys** file:
 
 ```sh
 chmod 644 ~/.ssh/authorized_keys
 ```
 
-[] To disable root login
+- To disable root login
 
-```sh
-sudo vi /etc/ssh/sshd_config
-```
+  ```sh
+  sudo vi /etc/ssh/sshd_config
+  ```
 
-[] on /etc/ssh/sshd_config change the following line
+On /etc/ssh/sshd_config change the following line:
 
 ```sh
 PermitRootLogin yes -> no
 ```
 
-[] Restart the SSH daemon (Depending on Ubuntu version, try one of the following options)
-
-```sh
-sudo service sshd restart
-```
-
-Or
-
-```sh
-sudo service ssh restart
-```
-
-Or
+Restart the SSH daemon (some older Ubuntu versions or others Linux distributions use _sshd_):
 
 ```sh
 sudo systemctl restart ssh
