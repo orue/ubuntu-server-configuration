@@ -6,8 +6,8 @@
 set -e  # Exit on error
 
 # Configuration
-GITHUB_USER="YOUR_USERNAME"
-GITHUB_REPO="YOUR_REPO"
+GITHUB_USER="orue"
+GITHUB_REPO="ubuntu-configuration"
 GITHUB_BRANCH="main"
 BASE_URL="https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}"
 
