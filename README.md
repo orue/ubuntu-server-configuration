@@ -70,7 +70,7 @@ sudo cat /var/log/auth.log
 
 **Add an SSH key for the newly created user.**
 
-sudo into the new user and change to the home directory, and create a .ssh directory if it doesn't exist:
+sudo into the new user and change to the home directory, and create a `.ssh` directory if it doesn't exist:
 
 ```sh
 su $USERNAME
@@ -79,7 +79,7 @@ mkdir -p ~/.ssh
 cd ~/.ssh
 ```
 
-Create a file named **authorized_keys** and paste the public key:
+Create a file named `authorized_keys` and paste the public key:
 
 ```sh
 vi ~/.ssh/authorized_keys
@@ -97,7 +97,7 @@ ssh-copy-id -i ~/.ssh/id_rsa.pub user@remote-host
 
 **Note:** Before disabling root, check that you can SSH with the new user.
 
-Change file permissions for the **authorized_keys** file:
+Change file permissions for the `authorized_keys` file:
 
 ```sh
 chmod 644 ~/.ssh/authorized_keys
@@ -109,7 +109,7 @@ chmod 644 ~/.ssh/authorized_keys
   sudo vi /etc/ssh/sshd_config
   ```
 
-On /etc/ssh/sshd_config change the following line:
+On `/etc/ssh/sshd_config` change the following line:
 
 ```sh
 PermitRootLogin yes -> no
@@ -124,14 +124,18 @@ sudo systemctl restart ssh
 ---
 
 ### Add .bashrc and .vimrc
+
 These optional `.bashrc` and `.vimrc` files offer a lightweight, minimalist setup designed to streamline everyday server administration and text editing tasks. They provide essential customizations without unnecessary complexity, making the command-line environment cleaner, faster, and more efficient for routine use.
 
 - Run the following command:
+
 ```sh
 curl -sSL https://raw.githubusercontent.com/orue/ubuntu-configuration/main/setup.sh | bash
 ```
+
 - Hide the default Ubuntu welcome message:
-**Note**: After applying these, your next login will show only your custom welcome message from the .bashrc!
+
+  **Note**: After applying these, your next login will show only the custom welcome message from the `.bashrc`
 
 ```sh
 # 1. Create .hushlogin (simplest, per-user)
