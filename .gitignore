@@ -1,0 +1,23 @@
+# Logs and temporary files
+*.log
+*.tmp
+temp/
+logs/
+
+# Build output directories
+build/
+dist/
+target/
+
+# Environment variables
+.env
+.env.local
+
+# IDE and editor specific files
+.vscode/
+*.swp
+*.bak
+
+# Operating System generated files
+.DS_Store
+Thumbs.db
