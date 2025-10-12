@@ -130,7 +130,7 @@ These optional `.bashrc` and `.vimrc` files offer a lightweight, minimalist setu
 - Run the following command:
 
 ```sh
-curl -sSL https://raw.githubusercontent.com/orue/ubuntu-server--configuration/main/setup.sh | bash
+curl -sSL https://raw.githubusercontent.com/orue/ubuntu-server-configuration/main/setup.sh | bash
 ```
 
 - Hide the default Ubuntu welcome message:
