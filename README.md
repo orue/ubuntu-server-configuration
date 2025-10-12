@@ -126,11 +126,12 @@ sudo systemctl restart ssh
 ### Add .bashrc and .vimrc
 These optional `.bashrc` and `.vimrc` files offer a lightweight, minimalist setup designed to streamline everyday server administration and text editing tasks. They provide essential customizations without unnecessary complexity, making the command-line environment cleaner, faster, and more efficient for routine use.
 
+- Run the following command:
 ```sh
 curl -sSL https://raw.githubusercontent.com/orue/ubuntu-configuration/main/setup.sh | bash
 ```
-
-**Note**: hide the default Ubuntu welcome message, the new installed .bashrc have a new welcome message
+- Hide the default Ubuntu welcome message:
+**Note**: After applying these, your next login will show only your custom welcome message from the .bashrc!
 
 ```sh
 # 1. Create .hushlogin (simplest, per-user)
