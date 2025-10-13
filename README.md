@@ -159,3 +159,15 @@ source ~/.bashrc
 #### Application Updates
 
 1 - Install unattended upgrade
+
+```sh
+sudo apt install unattended-upgrades
+```
+
+**Note**: Is already installed in most Linux distributions.
+
+2 - Enable Upgrades
+
+```sh
+sudo dpkg-reconfigure --priority=low unattended-upgrades
+```
