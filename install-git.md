@@ -73,7 +73,9 @@ git config --global user.email "your.email@company.com"
 
 - Keep `vim`, or change to `nano`, `code --wait`, etc.
 
-3 . Enable GPG signing (optional but recommended):
+3 . Enable GPG signing (optional but recommended for security):
+
+**Note**: [Generating a new GPG key](https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key)
 
 - Uncomment the signingkey and gpgSign lines
 - Set your GPG key ID
