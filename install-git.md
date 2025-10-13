@@ -40,12 +40,13 @@ After installing, configure Git with your details:
 
 ```sh
 git config --global user.name "Your Name"
-git config --global user.email "your.email@example.com"
-
-# Optional: Set default branch name
+git config --global user.email "you@example.com"
 git config --global init.defaultBranch main
+```
 
-# Verify configuration
+### Verify configuration
+
+```sh
 git config --list
 ```
 
@@ -53,7 +54,7 @@ git config --list
 
 ### .gitconfig
 
-Here is a full `.gitconfig` file example, for copy to the server, run the following command on the terminal.
+Here is a `.gitconfig` file example, for copy to the server, run the following command on the terminal.
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/orue/ubuntu-server-configuration/main/.gitconfig -o ~/.gitconfig
