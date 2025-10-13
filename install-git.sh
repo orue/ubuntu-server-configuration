@@ -34,22 +34,3 @@ echo "========================================="
 echo "Git installed successfully!"
 git --version
 echo "========================================="
-
-# Optional: Configure Git (prompts for user input)
-read -p "Would you like to configure Git now? (y/n): " configure
-
-if [ "$configure" = "y" ] || [ "$configure" = "Y" ]; then
-    read -p "Enter your name: " git_name
-    read -p "Enter your email: " git_email
-    
-    sudo -u $SUDO_USER git config --global user.name "$git_name"
-    sudo -u $SUDO_USER git config --global user.email "$git_email"
-    sudo -u $SUDO_USER git config --global init.defaultBranch main
-    
-    echo "Git configuration completed!"
-    sudo -u $SUDO_USER git config --list
-fi
-
-echo "========================================="
-echo "Installation complete!"
-echo "========================================="

@@ -26,6 +26,14 @@ git --version
 
 ---
 
+#### Optionally, run the following command on the terminal to automatically install the latest version of Git
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/orue/ubuntu-server-configuration/main/install-git.sh | sudo bash
+```
+
+---
+
 ### Post-Installation Configuration
 
 After installing, configure Git with your details:
@@ -39,12 +47,4 @@ git config --global init.defaultBranch main
 
 # Verify configuration
 git config --list
-```
-
----
-
-#### Optionally, run the following command to automatically install the latest version of Git and apply the recommended post-install configuration steps for your server.
-
-```sh
-curl -fsSL https://raw.githubusercontent.com/orue/ubuntu-server-configuration/main/install-git.sh | sudo bash
 ```
