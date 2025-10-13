@@ -48,3 +48,35 @@ git config --global init.defaultBranch main
 # Verify configuration
 git config --list
 ```
+
+---
+
+### .gitconfig
+
+Here is a full `.gitconfig` file example, for copy to the server, run the following command on the terminal.
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/orue/ubuntu-server-configuration/main/.gitconfig -o ~/.gitconfig
+```
+
+**Note**: Don't Forget to Customize:
+
+1 . Update your information:
+
+```sh
+git config --global user.name "Your Actual Name"
+git config --global user.email "your.email@company.com"
+```
+
+2 . Choose your editor:
+
+- Keep `vim`, or change to `nano`, `code --wait`, etc.
+
+3 . Enable GPG signing (optional but recommended):
+
+- Uncomment the signingkey and gpgSign lines
+- Set your GPG key ID
+
+4 . SSH for GitHub (if using SSH keys):
+
+- Uncomment the [url "git@github.com:"] section

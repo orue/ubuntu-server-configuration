@@ -1,0 +1,215 @@
+[user]
+    # Replace with your actual information
+    name = Your Name
+    email = your.email@company.com
+    # Sign commits with GPG (optional but recommended for security)
+    # signingkey = YOUR_GPG_KEY_ID
+
+[core]
+    # Use VS Code, vim, or nano as default editor
+    editor = vim
+    # Handle line endings automatically (important for cross-platform teams)
+    autocrlf = input
+    # Warn about whitespace errors
+    whitespace = trailing-space,space-before-tab
+    # Enable parallel index preload for better performance
+    preloadindex = true
+    # Use faster filesystem operations
+    fscache = true
+    # Set default pager with better options
+    pager = less -FRX
+
+[init]
+    # Use 'main' as default branch name
+    defaultBranch = main
+
+[pull]
+    # Rebase instead of merge when pulling (cleaner history)
+    rebase = true
+    # Automatically stash and unstash when rebasing
+    autoStash = true
+
+[push]
+    # Push current branch to upstream with same name
+    default = current
+    # Automatically set up remote tracking
+    autoSetupRemote = true
+    # Push tags along with commits when using --follow-tags
+    followTags = true
+
+[fetch]
+    # Automatically prune deleted remote branches
+    prune = true
+    # Prune tags that no longer exist on remote
+    pruneTags = true
+
+[rebase]
+    # Automatically stash uncommitted changes before rebase
+    autoStash = true
+    # Automatically apply fixup commits during interactive rebase
+    autoSquash = true
+
+[merge]
+    # Use the more informative diff3 conflict style
+    conflictStyle = zdiff3
+    # Include summary of merged commits in merge commit
+    log = true
+    # Automatically create a merge commit even on fast-forward
+    ff = false
+
+[diff]
+    # Use better algorithm for diffs
+    algorithm = histogram
+    # Show renames and copies
+    renames = copies
+    # Use mnemonic prefixes (index, work tree, commit, object) instead of a/b
+    mnemonicPrefix = true
+    # Detect moved lines in diffs
+    colorMoved = default
+
+[log]
+    # Show dates in relative format
+    date = relative
+    # Show branch graphs by default
+    decorate = short
+    # Abbreviate commit hashes
+    abbrevCommit = true
+
+[status]
+    # Show individual files in untracked directories
+    showUntrackedFiles = all
+    # Show branch information
+    branch = true
+    # Show stash count
+    showStash = true
+
+[color]
+    # Enable colors in output
+    ui = auto
+    branch = auto
+    diff = auto
+    status = auto
+
+[color "branch"]
+    current = yellow reverse
+    local = yellow
+    remote = green
+
+[color "diff"]
+    meta = yellow bold
+    frag = magenta bold
+    old = red bold
+    new = green bold
+
+[color "status"]
+    added = green
+    changed = yellow
+    untracked = red
+
+[alias]
+    # Short status
+    s = status -sb
+    
+    # Pretty log with graph
+    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+    
+    # Show all branches
+    branches = branch -a
+    
+    # Show all tags
+    tags = tag -l
+    
+    # Show all remotes
+    remotes = remote -v
+    
+    # Quick commit
+    cm = commit -m
+    
+    # Amend last commit
+    amend = commit --amend --no-edit
+    
+    # Undo last commit but keep changes
+    undo = reset HEAD~1 --soft
+    
+    # Show what changed in last commit
+    last = log -1 HEAD --stat
+    
+    # List contributors
+    contributors = shortlog --summary --numbered --email
+    
+    # Show ignored files
+    ignored = ls-files --others --ignored --exclude-standard
+    
+    # Unstage files
+    unstage = reset HEAD --
+    
+    # Discard changes in working directory
+    discard = checkout --
+    
+    # Delete merged branches (except main/master/develop)
+    cleanup = "!git branch --merged | grep -v '\\*\\|main\\|master\\|develop' | xargs -n 1 git branch -d"
+    
+    # Show current branch
+    current = symbolic-ref --short HEAD
+    
+    # List aliases
+    aliases = config --get-regexp alias
+    
+    # Quick stash with message
+    stash-save = stash save
+    
+    # Apply stash and drop it
+    stash-pop = stash pop
+    
+    # Show full diff of a commit
+    show-commit = show --pretty=fuller
+    
+    # Find commits by commit message
+    find = "!git log --pretty=format:'%C(yellow)%h %Cblue%ad %Creset%s%Cgreen [%cn] %Cred%d' --decorate --date=short --grep"
+    
+    # Find commits by source code
+    fc = "!git log --pretty=format:'%C(yellow)%h %Cblue%ad %Creset%s%Cgreen [%cn] %Cred%d' --decorate --date=short -S"
+
+[commit]
+    # Show diff when committing
+    verbose = true
+    # Sign commits with GPG (uncomment if using GPG)
+    # gpgSign = true
+    # Template for commit messages (create ~/.gitmessage)
+    # template = ~/.gitmessage
+
+[tag]
+    # Sort tags by version numbers
+    sort = version:refname
+    # Sign tags with GPG (uncomment if using GPG)
+    # gpgSign = true
+
+[branch]
+    # Sort branches by most recently used
+    sort = -committerdate
+    # Automatically set up tracking for new branches
+    autoSetupMerge = always
+
+[help]
+    # Automatically correct typos after 1.5 seconds
+    autocorrect = 15
+
+[credential]
+    # Cache credentials for 4 hours (14400 seconds)
+    helper = cache --timeout=14400
+
+[url "git@github.com:"]
+    # Use SSH instead of HTTPS for GitHub (if using SSH keys)
+    # insteadOf = https://github.com/
+
+[filter "lfs"]
+    # Git LFS configuration (if using large files)
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+
+[maintenance]
+    # Enable background maintenance
+    auto = false
+    strategy = incremental
