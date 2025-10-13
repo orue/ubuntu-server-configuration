@@ -13,6 +13,7 @@ Ubuntu Server is widely adopted for production environments thanks to its stabil
 - [Add an admin user](#add-an-admin-user)
 - [Add .bashrc and .vimrc](#add-bashrc-and-vimrc)
 - [Setup Git](./install-git.md)
+- [Application Update](#application-updates)
 
 ### Install Ubuntu Server 24.04 LTS
 
@@ -152,3 +153,9 @@ sudo systemctl stop motd-news.timer
 # 4. Reload your .bashrc
 source ~/.bashrc
 ```
+
+---
+
+#### Application Updates
+
+1 - Install unattended upgrade
