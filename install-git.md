@@ -54,13 +54,13 @@ git config --list
 
 ### .gitconfig
 
-Here is a `.gitconfig` file example, for copy to the server, run the following command on the terminal.
+Here is a [.gitconfig](https://github.com/orue/ubuntu-server-configuration/blob/main/.gitconfig) file example, for copy to the server, alternately the following command will copy the file your home directory.
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/orue/ubuntu-server-configuration/main/.gitconfig -o ~/.gitconfig
 ```
 
-**Note**: Don't Forget to Customize:
+**Note**: Don't Forget to customize the file after copy:
 
 1 . Update your information:
 
