@@ -10,13 +10,7 @@ filetype plugin indent on     " Enable file type detection and smart indenting
 " Color Scheme
 set t_Co=256                  " Enable 256 colors
 set background=dark
-let g:tokyonight_style = 'storm' " Options: night, storm
-let g:tokyonight_enable_italic = 0
-" Try tokyonight if available, fallback to slate
-silent! colorscheme tokyonight
-if !exists('g:colors_name') || g:colors_name != 'tokyonight'
-  colorscheme slate
-endif
+colorscheme slate             " Built-in dark theme
 
 " UI & Display
 set number                    " Show line numbers
