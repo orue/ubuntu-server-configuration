@@ -10,7 +10,7 @@ filetype plugin indent on     " Enable file type detection and smart indenting
 " Color Scheme
 set t_Co=256                  " Enable 256 colors
 set background=dark
-colorscheme slate             " Built-in dark theme
+colorscheme retrobox          " Built-in dark theme
 
 " UI & Display
 set number                    " Show line numbers
