@@ -10,9 +10,9 @@ filetype plugin indent on     " Enable file type detection and smart indenting
 " Color Scheme
 set t_Co=256                  " Enable 256 colors
 set background=dark
-" Try gruvbox if available, fallback to slate
-silent! colorscheme gruvbox
-if !exists('g:colors_name') || g:colors_name != 'gruvbox'
+" Try tokyonight-storm if available, fallback to slate
+silent! colorscheme tokyonight-storm
+if !exists('g:colors_name') || g:colors_name != 'tokyonight-storm'
   colorscheme slate
 endif
 
