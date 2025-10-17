@@ -18,6 +18,10 @@ target/
 *.swp
 *.bak
 
+# Claude
+.claude/
+
+
 # Operating System generated files
 .DS_Store
 Thumbs.db

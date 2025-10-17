@@ -10,7 +10,10 @@ filetype plugin indent on     " Enable file type detection and smart indenting
 " Color Scheme
 set t_Co=256                  " Enable 256 colors
 set background=dark
-colorscheme retrobox          " Built-in dark theme
+silent! colorscheme retrobox  " Try retrobox theme
+if !exists('g:colors_name')
+  colorscheme desert          " Fallback if retrobox not available
+endif
 
 " UI & Display
 set number                    " Show line numbers
@@ -29,6 +32,11 @@ set incsearch                 " Incremental search
 set hlsearch                  " Highlight search results
 set ignorecase                " Case insensitive search
 set smartcase                 " Case sensitive when uppercase present
+set history=1000              " Remember more commands and search history
+
+" Security
+set nomodeline                " Disable modelines for security
+set modelines=0
 
 " Indentation & Formatting
 set autoindent                " Copy indent from current line
@@ -61,6 +69,14 @@ set nobackup                  " No backup files (good for servers)
 set nowritebackup             " No backup while editing
 set noswapfile                " No swap files
 
+" Persistent Undo
+if has('persistent_undo')
+  set undodir=~/.vim/undodir
+  set undofile
+  set undolevels=1000
+  set undoreload=10000
+endif
+
 " Better Splits
 set splitright                " Vertical split to the right
 set splitbelow                " Horizontal split below
@@ -71,7 +87,7 @@ if has('clipboard')
 endif
 
 " Key Mappings
-let mapleader = ","           " Set leader key to comma
+let mapleader = " "           " Set leader key to space
 
 " Quick save and quit
 nnoremap <leader>w :w<CR>
@@ -87,11 +103,15 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
-" Move lines up/down
-nnoremap <A-j> :m .+1<CR>==
-nnoremap <A-k> :m .-2<CR>==
-vnoremap <A-j> :m '>+1<CR>gv=gv
-vnoremap <A-k> :m '<-2<CR>gv=gv
+" Move lines up/down (terminal-friendly)
+nnoremap <leader>j :m .+1<CR>==
+nnoremap <leader>k :m .-2<CR>==
+vnoremap <leader>j :m '>+1<CR>gv=gv
+vnoremap <leader>k :m '<-2<CR>gv=gv
+
+" Paste mode toggle
+set pastetoggle=<F2>
+nnoremap <leader>p :set paste!<CR>
 
 " Quick buffer navigation
 nnoremap <leader>bn :bnext<CR>
@@ -102,12 +122,24 @@ nnoremap <leader>bd :bdelete<CR>
 vnoremap < <gv
 vnoremap > >gv
 
+" Better command-line navigation
+cnoremap <C-p> <Up>
+cnoremap <C-n> <Down>
+
+" Save with sudo (for system files)
+cnoremap w!! w !sudo tee % >/dev/null
+
 " DevOps Specific
 " Quick file type toggles for common config files
 autocmd BufNewFile,BufRead *.yaml.j2,*.yml.j2 set filetype=yaml
 autocmd BufNewFile,BufRead Dockerfile* set filetype=dockerfile
 autocmd BufNewFile,BufRead *.tf set filetype=terraform
 autocmd BufNewFile,BufRead Jenkinsfile set filetype=groovy
+autocmd BufNewFile,BufRead *.conf set filetype=conf
+autocmd BufNewFile,BufRead nginx*.conf set filetype=nginx
+autocmd BufNewFile,BufRead *.hcl set filetype=hcl
+autocmd BufNewFile,BufRead .env* set filetype=sh
+autocmd BufNewFile,BufRead *inventory set filetype=ini
 
 " Trim trailing whitespace on save
 autocmd BufWritePre * :%s/\s\+$//e
@@ -137,8 +169,19 @@ let g:netrw_winsize = 25
 " Quick file explorer
 nnoremap <leader>e :Explore<CR>
 
-" Go-specific settings
-autocmd FileType go setlocal noexpandtab tabstop=4 shiftwidth=4
+" Quick comment toggle (filetype-aware)
+autocmd FileType python,sh,bash,yaml,conf,terraform nnoremap <leader>/ I# <Esc>
+autocmd FileType javascript,c,go nnoremap <leader>/ I// <Esc>
+autocmd FileType vim nnoremap <leader>/ I" <Esc>
+
+" Format JSON
+nnoremap <leader>fj :%!python3 -m json.tool<CR>
+
+" Execute current file
+nnoremap <leader>r :!%:p<CR>
+
+" Execute selected bash command
+vnoremap <leader>r :!bash<CR>
 
 " Python-specific settings
 autocmd FileType python setlocal colorcolumn=80  " PEP8 line length guide

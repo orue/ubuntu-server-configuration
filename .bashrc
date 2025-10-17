@@ -1,6 +1,7 @@
 #!/bin/bash
 # Minimal .bashrc for Ubuntu Server 24.04+
 # Optimized for server management with Python venv support
+# Enhanced for Full Stack Development and DevOps
 
 # If not running interactively, don't do anything
 case $- in
@@ -14,10 +15,19 @@ esac
 HISTCONTROL=ignoreboth:erasedups
 HISTSIZE=10000
 HISTFILESIZE=20000
+HISTTIMEFORMAT="%F %T "  # Add timestamps to history
 shopt -s histappend
+shopt -s cmdhist  # Save multi-line commands as one entry
 
 # Update window size after each command
 shopt -s checkwinsize
+
+# ============================================================================
+# PATH CONFIGURATION
+# ============================================================================
+# Add user bin directories if they exist
+[ -d "$HOME/.local/bin" ] && PATH="$HOME/.local/bin:$PATH"
+[ -d "$HOME/bin" ] && PATH="$HOME/bin:$PATH"
 
 # ============================================================================
 # COLOR DEFINITIONS
@@ -50,6 +60,11 @@ get_venv() {
         echo "($(basename $VIRTUAL_ENV)) "
     fi
 }
+
+# Function to get git branch (optional - uncomment if desired)
+# parse_git_branch() {
+#     git branch 2>/dev/null | grep '*' | sed 's/* //'
+# }
 
 # Set prompt with venv support
 # Format: (venv) user@hostname:~/path $
@@ -89,6 +104,7 @@ alias install='sudo apt install'
 alias remove='sudo apt remove'
 alias search='apt search'
 alias autoremove='sudo apt autoremove -y'
+alias clean='sudo apt clean && sudo apt autoremove -y'
 
 # ============================================================================
 # ALIASES - SYSTEM MONITORING
@@ -103,6 +119,7 @@ alias listening='ss -tuln'
 alias meminfo='free -h -l -t'
 alias cpuinfo='lscpu'
 alias diskusage='df -h | grep -v tmpfs | grep -v udev'
+alias top='htop 2>/dev/null || top'
 
 # ============================================================================
 # ALIASES - NETWORKING
@@ -129,14 +146,81 @@ alias syslog='sudo tail -f /var/log/syslog'
 alias authlog='sudo tail -f /var/log/auth.log'
 
 # ============================================================================
+# ALIASES - GIT
+# ============================================================================
+if command -v git >/dev/null 2>&1; then
+    alias g='git'
+    alias gs='git status'
+    alias ga='git add'
+    alias gc='git commit'
+    alias gp='git push'
+    alias gpl='git pull'
+    alias gl='git log --oneline --graph --decorate --all'
+    alias gd='git diff'
+    alias gb='git branch'
+    alias gco='git checkout'
+    alias gcm='git checkout main 2>/dev/null || git checkout master'
+    alias gf='git fetch'
+    alias gm='git merge'
+    alias gr='git remote -v'
+fi
+
+# ============================================================================
 # ALIASES - DOCKER (if installed)
 # ============================================================================
-alias dps='docker ps'
-alias dpsa='docker ps -a'
-alias di='docker images'
-alias dex='docker exec -it'
-alias dlog='docker logs -f'
-alias dprune='docker system prune -af'
+if command -v docker >/dev/null 2>&1; then
+    alias dps='docker ps'
+    alias dpsa='docker ps -a'
+    alias di='docker images'
+    alias dex='docker exec -it'
+    alias dlog='docker logs -f'
+    alias dprune='docker system prune -af'
+    alias dstop='docker stop $(docker ps -q)'
+    alias drm='docker rm $(docker ps -aq)'
+    alias drmi='docker rmi $(docker images -q)'
+fi
+
+# ============================================================================
+# ALIASES - DOCKER COMPOSE (if installed)
+# ============================================================================
+if command -v docker-compose >/dev/null 2>&1; then
+    alias dc='docker-compose'
+    alias dcu='docker-compose up -d'
+    alias dcd='docker-compose down'
+    alias dcl='docker-compose logs -f'
+    alias dcr='docker-compose restart'
+    alias dcp='docker-compose ps'
+fi
+
+# ============================================================================
+# ALIASES - KUBERNETES (if installed)
+# ============================================================================
+if command -v kubectl >/dev/null 2>&1; then
+    alias k='kubectl'
+    alias kgp='kubectl get pods'
+    alias kgs='kubectl get services'
+    alias kgd='kubectl get deployments'
+    alias kgn='kubectl get nodes'
+    alias kd='kubectl describe'
+    alias kl='kubectl logs -f'
+    alias kex='kubectl exec -it'
+    alias ka='kubectl apply -f'
+    alias kdel='kubectl delete'
+fi
+
+# ============================================================================
+# ALIASES - NODE.JS/NPM (if installed)
+# ============================================================================
+if command -v npm >/dev/null 2>&1; then
+    alias ni='npm install'
+    alias ns='npm start'
+    alias nt='npm test'
+    alias nr='npm run'
+    alias nb='npm run build'
+    alias nd='npm run dev'
+    alias nci='npm ci'
+    alias nu='npm update'
+fi
 
 # ============================================================================
 # ALIASES - SYSTEMD
@@ -154,31 +238,43 @@ alias sdisable='sudo systemctl disable'
 # ============================================================================
 alias venv='python3 -m venv venv'
 alias activate='source venv/bin/activate'
-alias deactivate='deactivate'
+
+# ============================================================================
+# ALIASES - TMUX/SCREEN
+# ============================================================================
+if command -v tmux >/dev/null 2>&1; then
+    alias t='tmux'
+    alias ta='tmux attach -t'
+    alias tl='tmux list-sessions'
+    alias tn='tmux new-session -s'
+    alias tk='tmux kill-session -t'
+fi
 
 # ============================================================================
 # FUNCTIONS
 # ============================================================================
 # Extract various archive formats
 extract() {
-    if [ -f "$1" ]; then
-        case "$1" in
-            *.tar.bz2)   tar xjf "$1"     ;;
-            *.tar.gz)    tar xzf "$1"     ;;
-            *.bz2)       bunzip2 "$1"     ;;
-            *.rar)       unrar x "$1"     ;;
-            *.gz)        gunzip "$1"      ;;
-            *.tar)       tar xf "$1"      ;;
-            *.tbz2)      tar xjf "$1"     ;;
-            *.tgz)       tar xzf "$1"     ;;
-            *.zip)       unzip "$1"       ;;
-            *.Z)         uncompress "$1"  ;;
-            *.7z)        7z x "$1"        ;;
-            *)           echo "'$1' cannot be extracted" ;;
-        esac
-    else
-        echo "'$1' is not a valid file"
+    if [ ! -f "$1" ]; then
+        echo "Error: '$1' is not a valid file"
+        return 1
     fi
+
+    case "$1" in
+        *.tar.bz2)   tar xjf "$1"     ;;
+        *.tar.gz)    tar xzf "$1"     ;;
+        *.tar.xz)    tar xJf "$1"     ;;
+        *.bz2)       bunzip2 "$1"     ;;
+        *.rar)       unrar x "$1" 2>/dev/null || echo "unrar not installed" ;;
+        *.gz)        gunzip "$1"      ;;
+        *.tar)       tar xf "$1"      ;;
+        *.tbz2)      tar xjf "$1"     ;;
+        *.tgz)       tar xzf "$1"     ;;
+        *.zip)       unzip "$1"       ;;
+        *.Z)         uncompress "$1"  ;;
+        *.7z)        7z x "$1" 2>/dev/null || echo "7z not installed" ;;
+        *)           echo "'$1' cannot be extracted" ;;
+    esac
 }
 
 # Quick directory navigation up multiple levels
@@ -196,12 +292,53 @@ up() {
 
 # Find a file with pattern in name
 ff() {
-    find . -type f -iname "*$1*"
+    find . -type f -iname "*$1*" 2>/dev/null
 }
 
 # Find a directory with pattern in name
 fd() {
-    find . -type d -iname "*$1*"
+    find . -type d -iname "*$1*" 2>/dev/null
+}
+
+# Check which process is using a specific port
+portcheck() {
+    if [ -z "$1" ]; then
+        echo "Usage: portcheck <port_number>"
+        return 1
+    fi
+    sudo lsof -i :"$1" 2>/dev/null || echo "No process found on port $1"
+}
+
+# Show failed systemd services
+failed_services() {
+    systemctl --failed
+}
+
+# Tail multiple log files
+tailf() {
+    if [ $# -eq 0 ]; then
+        echo "Usage: tailf <file1> [file2] ..."
+        return 1
+    fi
+    tail -f "$@"
+}
+
+# Create directory and cd into it
+mkcd() {
+    if [ -z "$1" ]; then
+        echo "Usage: mkcd <directory_name>"
+        return 1
+    fi
+    mkdir -p "$1" && cd "$1"
+}
+
+# Quick backup of a file
+backup() {
+    if [ -z "$1" ]; then
+        echo "Usage: backup <file>"
+        return 1
+    fi
+    cp "$1" "$1.bak.$(date +%Y%m%d_%H%M%S)"
 }
 
 # ============================================================================
@@ -227,15 +364,16 @@ show_welcome() {
     # Get system information
     local hostname=$(hostname)
     local kernel=$(uname -r)
-    local uptime=$(uptime -p | sed 's/up //')
+    local uptime=$(uptime -p 2>/dev/null | sed 's/up //' || echo "N/A")
     local os=$(lsb_release -ds 2>/dev/null || echo "Ubuntu Server")
     local users=$(who | wc -l)
     local load=$(uptime | awk -F'load average:' '{print $2}' | xargs)
-    local memory=$(free -h | awk '/^Mem:/ {print $3 "/" $2}')
-    local disk=$(df -h / | awk 'NR==2 {print $3 "/" $2 " (" $5 ")"}')
-    local ip=$(hostname -I | awk '{print $1}')
+    local memory=$(free -h 2>/dev/null | awk '/^Mem:/ {print $3 "/" $2}' || echo "N/A")
+    local disk=$(df -h / 2>/dev/null | awk 'NR==2 {print $3 "/" $2 " (" $5 ")"}' || echo "N/A")
+    local disk_pct=$(df -h / 2>/dev/null | awk 'NR==2 {print $5}' | tr -d '%' || echo "0")
+    local ip=$(hostname -I 2>/dev/null | awk '{print $1}' || echo "N/A")
     local datetime=$(date '+%Y-%m-%d %H:%M:%S %Z')
-    
+
     echo -e "${C_BOLD}${C_CYAN}"
     echo "╔═══════════════════════════════════════════════════════════════╗"
     echo "║              WELCOME TO SERVER MANAGEMENT CONSOLE             ║"
@@ -255,19 +393,57 @@ show_welcome() {
     echo -e "  ${C_BLUE}Disk Usage / :${C_RESET} ${disk}"
     echo -e "  ${C_BLUE}Active Users :${C_RESET} ${users}"
     echo ""
-    
+
+    # Warnings section
+    local warnings_shown=0
+
+    # Disk space warning
+    if [ "$disk_pct" -gt 80 ] 2>/dev/null; then
+        if [ $warnings_shown -eq 0 ]; then
+            echo -e "${C_BOLD}${C_YELLOW}⚠ Warnings:${C_RESET}"
+            warnings_shown=1
+        fi
+        echo -e "  ${C_RED}• Root disk usage at ${disk_pct}%${C_RESET}"
+    fi
+
+    # Failed SSH attempts warning
+    if [ -f /var/log/auth.log ] && sudo -n test -r /var/log/auth.log 2>/dev/null; then
+        local failed_ssh=$(sudo grep "Failed password" /var/log/auth.log 2>/dev/null | tail -5 | wc -l)
+        if [ "$failed_ssh" -gt 0 ] 2>/dev/null; then
+            if [ $warnings_shown -eq 0 ]; then
+                echo -e "${C_BOLD}${C_YELLOW}⚠ Warnings:${C_RESET}"
+                warnings_shown=1
+            fi
+            echo -e "  ${C_YELLOW}• ${failed_ssh} recent failed SSH attempts (last 5)${C_RESET}"
+        fi
+    fi
+
+    # Failed services warning
+    local failed_count=$(systemctl --failed --no-pager --no-legend 2>/dev/null | wc -l)
+    if [ "$failed_count" -gt 0 ] 2>/dev/null; then
+        if [ $warnings_shown -eq 0 ]; then
+            echo -e "${C_BOLD}${C_YELLOW}⚠ Warnings:${C_RESET}"
+            warnings_shown=1
+        fi
+        echo -e "  ${C_YELLOW}• ${failed_count} failed systemd service(s) - run 'failed_services'${C_RESET}"
+    fi
+
+    if [ $warnings_shown -eq 1 ]; then
+        echo ""
+    fi
+
     # Optional: Show last login
     if [ -f /var/log/wtmp ]; then
-        local lastlogin=$(last -1 -R $USER | head -1 | awk '{print $4, $5, $6, $7}')
-        if [ -n "$lastlogin" ]; then
+        local lastlogin=$(last -1 -R $USER 2>/dev/null | head -1 | awk '{print $4, $5, $6, $7}')
+        if [ -n "$lastlogin" ] && [ "$lastlogin" != "   " ]; then
             echo -e "${C_BOLD}${C_GREEN}Last Login:${C_RESET}"
             echo -e "  ${C_BLUE}${lastlogin}${C_RESET}"
             echo ""
         fi
     fi
-    
+
     # Check for system updates (Ubuntu/Debian)
-    if command -v apt 2>&1 >/dev/null; then
+    if command -v apt >/dev/null 2>&1; then
         if [ -f /var/lib/update-notifier/updates-available ]; then
             local updates=$(cat /var/lib/update-notifier/updates-available 2>/dev/null | head -2)
             if [ -n "$updates" ]; then
@@ -277,7 +453,7 @@ show_welcome() {
             fi
         fi
     fi
-    
+
     echo -e "${C_CYAN}═══════════════════════════════════════════════════════════════${C_RESET}"
     echo ""
 }
