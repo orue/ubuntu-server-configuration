@@ -7,7 +7,7 @@ set -e  # Exit on error
 
 # Configuration
 GITHUB_USER="orue"
-GITHUB_REPO="ubuntu-configuration"
+GITHUB_REPO="ubuntu-server-configuration"
 GITHUB_BRANCH="main"
 BASE_URL="https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}"
 
@@ -34,10 +34,42 @@ print_error() {
 backup_file() {
     local file=$1
     if [ -f "$file" ]; then
-        local backup="${file}.backup.$(date +%Y%m%d_%H%M%S)"
+        # Use nanoseconds to prevent race conditions
+        local backup="${file}.backup.$(date +%Y%m%d_%H%M%S_%N)"
         print_warning "Backing up existing $file to $backup"
-        cp "$file" "$backup"
+        if ! cp "$file" "$backup"; then
+            print_error "Failed to backup $file"
+            return 1
+        fi
     fi
+    return 0
+}
+
+# Function to verify downloaded file content
+verify_dotfile() {
+    local file=$1
+    local filename=$(basename "$file")
+
+    # Check if file exists and is not empty
+    if [ ! -s "$file" ]; then
+        print_error "Downloaded file is empty or missing: ${filename}"
+        return 1
+    fi
+
+    # Check if file looks like an HTML error page (GitHub 404, etc.)
+    if head -n 1 "$file" | grep -qi '<!DOCTYPE\|<html'; then
+        print_error "Downloaded file appears to be an HTML error page: ${filename}"
+        print_error "Check repository name, branch, and file path"
+        return 1
+    fi
+
+    # Check file size is reasonable (between 10 bytes and 1MB)
+    local size=$(wc -c < "$file")
+    if [ "$size" -lt 10 ] || [ "$size" -gt 1048576 ]; then
+        print_warning "Downloaded file size seems unusual: ${size} bytes"
+    fi
+
+    return 0
 }
 
 # Function to download and install a dotfile
@@ -45,26 +77,42 @@ install_dotfile() {
     local filename=$1
     local url="${BASE_URL}/${filename}"
     local destination="${HOME}/${filename}"
+    local temp_file="${destination}.tmp"
 
     print_info "Downloading ${filename}..."
 
-    # If GITHUB_TOKEN is set, use it for authentication
+    # Download to temporary file first
+    local download_success=0
     if [ -n "$GITHUB_TOKEN" ]; then
-        if curl -fsSL -H "Authorization: token ${GITHUB_TOKEN}" "$url" -o "$destination"; then
-            print_info "Successfully installed ${filename}"
-            return 0
-        else
-            print_error "Failed to download ${filename}"
-            return 1
+        if curl -fsSL -H "Authorization: token ${GITHUB_TOKEN}" "$url" -o "$temp_file"; then
+            download_success=1
         fi
     else
-        if curl -fsSL "$url" -o "$destination"; then
-            print_info "Successfully installed ${filename}"
-            return 0
-        else
-            print_error "Failed to download ${filename}"
-            return 1
+        if curl -fsSL "$url" -o "$temp_file"; then
+            download_success=1
         fi
+    fi
+
+    if [ $download_success -eq 0 ]; then
+        print_error "Failed to download ${filename}"
+        rm -f "$temp_file"
+        return 1
+    fi
+
+    # Verify the downloaded content
+    if ! verify_dotfile "$temp_file"; then
+        rm -f "$temp_file"
+        return 1
+    fi
+
+    # Move verified file to final destination
+    if mv "$temp_file" "$destination"; then
+        print_info "Successfully installed ${filename}"
+        return 0
+    else
+        print_error "Failed to move ${filename} to destination"
+        rm -f "$temp_file"
+        return 1
     fi
 }
 
@@ -88,7 +136,8 @@ suppress_motd() {
         local executable_count=$(find /etc/update-motd.d -type f -executable 2>/dev/null | wc -l)
         if [ "$executable_count" -gt 0 ]; then
             print_info "Disabling dynamic MOTD scripts (requires sudo)"
-            if sudo chmod -x /etc/update-motd.d/* 2>/dev/null; then
+            # Use find to safely handle files instead of glob expansion
+            if find /etc/update-motd.d -type f -executable -exec sudo chmod -x {} + 2>/dev/null; then
                 print_info "Successfully disabled ${executable_count} MOTD script(s)"
                 changes_made=1
             else
@@ -134,25 +183,17 @@ main() {
     echo ""
 
     # Backup existing files
-    backup_file "${HOME}/.bashrc"
-    backup_file "${HOME}/.vimrc"
+    backup_file "${HOME}/.bashrc" || exit 1
+    backup_file "${HOME}/.vimrc" || exit 1
 
     # Install dotfiles
-    install_dotfile ".bashrc"
-    install_dotfile ".vimrc"
+    install_dotfile ".bashrc" || exit 1
+    install_dotfile ".vimrc" || exit 1
 
     echo ""
 
     # Suppress Ubuntu default MOTD (idempotent)
     suppress_motd
-
-    # Apply .bashrc changes
-    print_info "Applying .bashrc changes..."
-    if [ -f "${HOME}/.bashrc" ]; then
-        # Note: 'source' only affects the script's shell, not the user's shell
-        # shellcheck disable=SC1090
-        source "${HOME}/.bashrc" 2>/dev/null || print_warning "Could not source .bashrc in script context"
-    fi
 
     echo ""
     print_info "=========================================="
