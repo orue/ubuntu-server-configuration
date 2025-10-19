@@ -555,7 +555,7 @@ This automated script installs:
 - **`.vimrc`** - Optimized Vim editor configuration
 - **`.gitconfig`** - Git aliases and workflow improvements (essential for Part 3)
 
-Your existing files are automatically backed up before installation (saved as `.bashrc.backup`, `.vimrc.backup`, etc.).
+Your existing files are automatically backed up before installation to `~/.dotfiles_backup/`, keeping only the last 3 versions of each file to manage disk space efficiently.
 
 ### Customize Git Configuration
 

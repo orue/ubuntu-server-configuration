@@ -192,7 +192,8 @@ curl -sSL https://raw.githubusercontent.com/orue/ubuntu-server-configuration/mai
 ```
 
 The script will:
-- Backup your existing `.bashrc`, `.vimrc`, and `.gitconfig` files
+- Backup your existing `.bashrc`, `.vimrc`, and `.gitconfig` files to `~/.dotfiles_backup/`
+- Keep only the last 3 versions of each file
 - Download and install the new dotfiles
 - Configure MOTD suppression for a cleaner login experience
 
