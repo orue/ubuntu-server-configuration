@@ -197,7 +197,7 @@ main() {
 
     echo ""
     print_info "=========================================="
-    print_info "Installation complete!"
+    print_info "Installation complete!!!"
     print_info "=========================================="
     print_info "✓ Dotfiles installed"
     print_info "✓ MOTD suppression configured"
