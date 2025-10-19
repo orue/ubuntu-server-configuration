@@ -1,4 +1,4 @@
-# Installing Ubuntu Server 24.04 LTS on a Cloud VPS: A Complete Guide
+# Deploy Python Apps Without the Cloud Complexity: A Practical Ubuntu Server Guide
 
 ![image](./img/ubuntu-install.png)
 
