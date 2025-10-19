@@ -12,9 +12,8 @@ This repository provides everything you need to set up a fresh, clean configurat
 
 ## Features
 
-- **Automated Dotfiles Installation** - Custom `.bashrc` and `.vimrc` configurations
+- **Automated Dotfiles Installation** - Custom `.bashrc`, `.vimrc`, and `.gitconfig` configurations
 - **Git Setup Automation** - Latest Git version installation from official PPA
-- **Custom Git Configuration** - Pre-configured `.gitconfig` template
 - **Security Hardening** - SSH key setup and root login disabling
 - **Unattended Updates** - Automatic security updates configuration
 - **Reference Documentation** - Bash aliases and Vim keymapping cheatsheets
@@ -27,13 +26,17 @@ For a new Ubuntu Server installation, run these commands:
 # 1. Update the system
 sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y
 
-# 2. Install custom dotfiles (.bashrc and .vimrc)
-curl -sSL https://raw.githubusercontent.com/orue/ubuntu-server-configuration/main/dotfiles.sh | bash
-
-# 3. Install latest Git
+# 2. Install latest Git
 curl -fsSL https://raw.githubusercontent.com/orue/ubuntu-server-configuration/main/install-git.sh | sudo bash
 
-# 4. Reboot
+# 3. Install custom dotfiles (.bashrc, .vimrc, and .gitconfig)
+curl -sSL https://raw.githubusercontent.com/orue/ubuntu-server-configuration/main/dotfiles.sh | bash
+
+# 4. Customize your Git configuration
+git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
+
+# 5. Reboot
 sudo shutdown now -r
 ```
 
@@ -174,7 +177,11 @@ sudo systemctl restart ssh
 
 ## Dotfiles Setup
 
-The included `.bashrc` and `.vimrc` files provide a lightweight, minimalist configuration designed to streamline everyday server administration and text editing tasks. They offer essential customizations without unnecessary complexity, making the command-line environment cleaner, faster, and more efficient.
+The included dotfiles provide a lightweight, minimalist configuration designed to streamline everyday server administration and development tasks:
+
+- **`.bashrc`** - Custom bash aliases, functions, and prompt configuration
+- **`.vimrc`** - Vim editor settings and keybindings
+- **`.gitconfig`** - Pre-configured Git settings with useful aliases and defaults
 
 ### Install Dotfiles
 
@@ -185,9 +192,18 @@ curl -sSL https://raw.githubusercontent.com/orue/ubuntu-server-configuration/mai
 ```
 
 The script will:
-- Backup your existing `.bashrc` and `.vimrc` files
+- Backup your existing `.bashrc`, `.vimrc`, and `.gitconfig` files
 - Download and install the new dotfiles
 - Configure MOTD suppression for a cleaner login experience
+
+### Post-Installation
+
+After installation, customize your Git configuration:
+
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
+```
 
 ### MOTD Suppression
 
@@ -233,19 +249,20 @@ git --version
 
 ### Configure Git
 
+**Note:** If you've already run the `dotfiles.sh` script, your `.gitconfig` is already installed. You just need to customize it with your information:
+
 ```bash
 git config --global user.name "Your Name"
 git config --global user.email "you@example.com"
-git config --global init.defaultBranch main
 ```
 
-For a pre-configured `.gitconfig` template:
+If you didn't use the dotfiles script, you can download the `.gitconfig` template separately:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/orue/ubuntu-server-configuration/main/.gitconfig -o ~/.gitconfig
+git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
 ```
-
-**Remember to customize the file with your information after copying.**
 
 ---
 

@@ -185,10 +185,12 @@ main() {
     # Backup existing files
     backup_file "${HOME}/.bashrc" || exit 1
     backup_file "${HOME}/.vimrc" || exit 1
+    backup_file "${HOME}/.gitconfig" || exit 1
 
     # Install dotfiles
     install_dotfile ".bashrc" || exit 1
     install_dotfile ".vimrc" || exit 1
+    install_dotfile ".gitconfig" || exit 1
 
     echo ""
 
@@ -199,11 +201,15 @@ main() {
     print_info "=========================================="
     print_info "Installation complete!"
     print_info "=========================================="
-    print_info "✓ Dotfiles installed"
+    print_info "✓ Dotfiles installed (.bashrc, .vimrc, .gitconfig)"
     print_info "✓ MOTD suppression configured"
     print_info "✓ Backups created with timestamp suffixes"
     echo ""
-    print_warning "IMPORTANT: Run 'source ~/.bashrc' or logout/login to apply all changes"
+    print_warning "IMPORTANT: Customize your .gitconfig with your name and email!"
+    print_warning "Run: git config --global user.name \"Your Name\""
+    print_warning "Run: git config --global user.email \"you@example.com\""
+    echo ""
+    print_info "To apply bash changes: source ~/.bashrc or logout/login"
     echo ""
 }
 
