@@ -1,5 +1,7 @@
 # Installing Ubuntu Server 24.04 LTS on a Cloud VPS: A Complete Guide
 
+![image](./img/ubuntu-install.png)
+
 **Part 1 of 3: Base System Setup**
 
 ## Series Overview
