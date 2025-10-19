@@ -20,6 +20,10 @@ This guide focuses on deploying a rock-solid Ubuntu Server 24.04 LTS foundation 
 
 By the end of this guide, you'll have a secure, optimized Ubuntu server ready for containerized applications (covered in Part 2) and automated deployments (covered in Part 3).
 
+### Acknowledgments
+
+This guide is inspired by the practical insights from Michael Kennedy's excellent book [**Python in Production**](https://talkpython.fm/books/python-in-production). His real-world experience running TalkPython and the philosophy that **big, complex cloud infrastructure isn't necessary for every project** has been invaluable. You don't need Kubernetes clusters and complex managed services to build reliable, production-ready applications—a well-configured Ubuntu VPS can be powerful, cost-effective, and much simpler to manage. Thank you, Michael, for sharing these insights with the developer community!
+
 ## Why Choose Ubuntu for Your Cloud VPS?
 
 ### Market Leadership and Proven Track Record
@@ -1202,6 +1206,9 @@ nslookup domain.com
 ---
 
 ## Resources
+
+### Recommended Reading
+- **Python in Production** by Michael Kennedy: https://talkpython.fm/books/python-in-production - Essential reading for building production-ready Python applications with practical, no-nonsense deployment strategies
 
 ### Official Documentation
 - **Ubuntu Server 24.04 LTS:** https://ubuntu.com/download/server
