@@ -10,6 +10,8 @@ GITHUB_USER="orue"
 GITHUB_REPO="ubuntu-server-configuration"
 GITHUB_BRANCH="main"
 BASE_URL="https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}"
+BACKUP_DIR="${HOME}/.dotfiles_backup"
+MAX_BACKUPS=3
 
 # Colors for output
 RED='\033[0;31m'
@@ -34,15 +36,46 @@ print_error() {
 backup_file() {
     local file=$1
     if [ -f "$file" ]; then
+        # Create backup directory if it doesn't exist
+        if [ ! -d "$BACKUP_DIR" ]; then
+            print_info "Creating backup directory: $BACKUP_DIR"
+            mkdir -p "$BACKUP_DIR"
+        fi
+
+        # Get the filename without path
+        local filename=$(basename "$file")
         # Use nanoseconds to prevent race conditions
-        local backup="${file}.backup.$(date +%Y%m%d_%H%M%S_%N)"
+        local timestamp=$(date +%Y%m%d_%H%M%S_%N)
+        local backup="${BACKUP_DIR}/${filename}.backup.${timestamp}"
+
         print_warning "Backing up existing $file to $backup"
         if ! cp "$file" "$backup"; then
             print_error "Failed to backup $file"
             return 1
         fi
+
+        # Clean up old backups, keeping only the last MAX_BACKUPS versions
+        cleanup_old_backups "$filename"
     fi
     return 0
+}
+
+# Function to clean up old backups, keeping only the last N versions
+cleanup_old_backups() {
+    local filename=$1
+    local backup_pattern="${BACKUP_DIR}/${filename}.backup.*"
+
+    # Count existing backups for this file
+    local backup_count=$(ls -1 ${backup_pattern} 2>/dev/null | wc -l)
+
+    if [ "$backup_count" -gt "$MAX_BACKUPS" ]; then
+        print_info "Cleaning up old backups for ${filename} (keeping ${MAX_BACKUPS} most recent)"
+        # Sort by modification time (oldest first) and delete excess backups
+        ls -1t ${backup_pattern} 2>/dev/null | tail -n +$((MAX_BACKUPS + 1)) | while read old_backup; do
+            print_info "Removing old backup: $(basename "$old_backup")"
+            rm -f "$old_backup"
+        done
+    fi
 }
 
 # Function to verify downloaded file content
@@ -203,7 +236,7 @@ main() {
     print_info "=========================================="
     print_info "✓ Dotfiles installed (.bashrc, .vimrc, .gitconfig)"
     print_info "✓ MOTD suppression configured"
-    print_info "✓ Backups created with timestamp suffixes"
+    print_info "✓ Backups stored in ${BACKUP_DIR} (keeping last ${MAX_BACKUPS} versions)"
     echo ""
     print_warning "IMPORTANT: Customize your .gitconfig with your name and email!"
     print_warning "Run: git config --global user.name \"Your Name\""
