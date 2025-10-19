@@ -22,7 +22,7 @@ By the end of this guide, you'll have a secure, optimized Ubuntu server ready fo
 
 ### Acknowledgments
 
-This guide is inspired by the practical insights from Michael Kennedy's excellent book [**Python in Production**](https://talkpython.fm/books/python-in-production). His real-world experience running TalkPython and the philosophy that **big, complex cloud infrastructure isn't necessary for every project** has been invaluable. You don't need Kubernetes clusters and complex managed services to build reliable, production-ready applications—a well-configured Ubuntu VPS can be powerful, cost-effective, and much simpler to manage. Thank you, Michael, for sharing these insights with the developer community!
+This guide is inspired by the practical insights from Michael Kennedy's excellent book [**Talk Python in Production**](https://talkpython.fm/books/python-in-production). His real-world experience running TalkPython and the philosophy that **big, complex cloud infrastructure isn't necessary for every project** has been invaluable. You don't need Kubernetes clusters and complex managed services to build reliable, production-ready applications—a well-configured Ubuntu VPS can be powerful, cost-effective, and much simpler to manage. Thank you, Michael, for sharing these insights with the developer community!
 
 ## Why Choose Ubuntu for Your Cloud VPS?
 
