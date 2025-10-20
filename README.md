@@ -183,6 +183,8 @@ The included dotfiles provide a lightweight, minimalist configuration designed t
 - **`.vimrc`** - Vim editor settings and keybindings
 - **`.gitconfig`** - Pre-configured Git settings with useful aliases and defaults
 
+**Note:** These dotfiles are optional but highly recommended. They include good practices and useful aliases and shortcuts for server administration and file editing that can significantly improve your productivity on the server.
+
 ### Install Dotfiles
 
 Run the automated installation script:

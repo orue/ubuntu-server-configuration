@@ -2,6 +2,8 @@
 
 ![image](./img/ubuntu-install.png)
 
+**Author:** Carlos Orue
+
 **Part 1 of 3: Base System Setup**
 
 ## Series Overview
@@ -554,6 +556,8 @@ This automated script installs:
 - **`.bashrc`** - Custom aliases, functions, and enhanced prompt for productivity
 - **`.vimrc`** - Optimized Vim editor configuration
 - **`.gitconfig`** - Git aliases and workflow improvements (essential for Part 3)
+
+**Note:** These dotfiles are optional but highly recommended. They include good practices and useful aliases and shortcuts for server administration and file editing that can significantly improve your productivity when working on the server.
 
 Your existing files are automatically backed up before installation to `~/.dotfiles_backup/`, keeping only the last 3 versions of each file to manage disk space efficiently.
 
@@ -1308,6 +1312,7 @@ This article is part of a comprehensive series based on best practices and autom
 - **Part 2:** Docker and Container Management (coming soon)
 - **Part 3:** CI/CD for Python Applications (coming soon)
 
+**Author:** Carlos Orue
 **Last Updated:** October 2025
 **Covers:** Ubuntu Server 24.04 LTS (Noble Numbat)
 **Target Providers:** DigitalOcean, Linode, Hetzner Cloud
