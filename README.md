@@ -1,5 +1,7 @@
 # Ubuntu Server 24.04 LTS Configuration
 
+![image](./img/ubuntu-install-2404.png)
+
 > A comprehensive guide for setting up and configuring Ubuntu Server 24.04 LTS (Noble Numbat) with dotfiles, Git, and automated updates.
 
 **Last Updated:** October 2025
@@ -312,3 +314,4 @@ This repository includes helpful reference guides:
 - **[Bash Aliases Reference](./bashrc-aliases-reference.md)** - Complete guide to custom bash aliases and functions
 - **[Vim Keymapping Cheatsheet](./vim-keymapping-cheatsheet.md)** - Quick reference for custom vim keybindings
 - **[Git Setup Guide](./install-git.md)** - Detailed Git installation and configuration
+:
