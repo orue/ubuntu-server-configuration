@@ -428,6 +428,21 @@ show_welcome() {
         echo -e "  ${C_YELLOW}• ${failed_count} failed systemd service(s) - run 'failed_services'${C_RESET}"
     fi
 
+    # Reboot required warning
+    if [ -f /var/run/reboot-required ]; then
+        if [ $warnings_shown -eq 0 ]; then
+            echo -e "${C_BOLD}${C_YELLOW}⚠ Warnings:${C_RESET}"
+            warnings_shown=1
+        fi
+        echo -e "  ${C_RED}• System reboot required${C_RESET}"
+        if [ -f /var/run/reboot-required.pkgs ]; then
+            local reboot_pkgs=$(cat /var/run/reboot-required.pkgs 2>/dev/null | wc -l)
+            if [ "$reboot_pkgs" -gt 0 ]; then
+                echo -e "    ${C_YELLOW}(${reboot_pkgs} package(s) require reboot)${C_RESET}"
+            fi
+        fi
+    fi
+
     if [ $warnings_shown -eq 1 ]; then
         echo ""
     fi
@@ -444,13 +459,27 @@ show_welcome() {
 
     # Check for system updates (Ubuntu/Debian)
     if command -v apt >/dev/null 2>&1; then
+        local updates_available=0
+        local security_updates=0
+
+        # Check using update-notifier cache
         if [ -f /var/lib/update-notifier/updates-available ]; then
             local updates=$(cat /var/lib/update-notifier/updates-available 2>/dev/null | head -2)
             if [ -n "$updates" ]; then
-                echo -e "${C_BOLD}${C_YELLOW}System Updates:${C_RESET}"
-                echo -e "  ${updates}"
-                echo ""
+                updates_available=$(echo "$updates" | grep -oP '\d+(?= (package|packages) can be updated)' | head -1)
+                security_updates=$(echo "$updates" | grep -oP '\d+(?= (update is|updates are) security updates)' | head -1)
             fi
+        fi
+
+        # Display updates information if available
+        if [ "$updates_available" -gt 0 ] 2>/dev/null; then
+            echo -e "${C_BOLD}${C_YELLOW}System Updates Available:${C_RESET}"
+            echo -e "  ${C_CYAN}• ${updates_available} package(s) can be updated${C_RESET}"
+            if [ "$security_updates" -gt 0 ] 2>/dev/null; then
+                echo -e "  ${C_RED}• ${security_updates} security update(s) available${C_RESET}"
+            fi
+            echo -e "  ${C_BLUE}Run 'update' to install updates${C_RESET}"
+            echo ""
         fi
     fi
 
