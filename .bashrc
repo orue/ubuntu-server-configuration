@@ -105,6 +105,7 @@ alias remove='sudo apt remove'
 alias search='apt search'
 alias autoremove='sudo apt autoremove -y'
 alias clean='sudo apt clean && sudo apt autoremove -y'
+alias reboot='sudo reboot'
 
 # ============================================================================
 # ALIASES - SYSTEM MONITORING
