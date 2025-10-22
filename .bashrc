@@ -61,19 +61,22 @@ get_venv() {
     fi
 }
 
-# Function to get git branch (optional - uncomment if desired)
-# parse_git_branch() {
-#     git branch 2>/dev/null | grep '*' | sed 's/* //'
-# }
+# Function to get git branch
+get_git_branch() {
+    local branch=$(git branch 2>/dev/null | grep '*' | sed 's/* //')
+    if [[ -n "$branch" ]]; then
+        echo " ($branch)"
+    fi
+}
 
-# Set prompt with venv support
-# Format: (venv) user@hostname:~/path $
+# Set prompt with venv and git support
+# Format: (venv) user@hostname:~/path (branch) $
 if [ "$EUID" -eq 0 ]; then
     # Root prompt in red
-    PS1="${RED}\$(get_venv)${RED}\u@\h${RESET}:${BLUE}\w${RESET}${RED}#${RESET} "
+    PS1="${RED}\$(get_venv)${RED}\u@\h${RESET}:${BLUE}\w${CYAN}\$(get_git_branch)${RESET}${RED}#${RESET} "
 else
     # Regular user prompt in green
-    PS1="${YELLOW}\$(get_venv)${GREEN}\u@\h${RESET}:${BLUE}\w${RESET}\$ "
+    PS1="${YELLOW}\$(get_venv)${GREEN}\u@\h${RESET}:${BLUE}\w${CYAN}\$(get_git_branch)${RESET}\$ "
 fi
 
 # ============================================================================
