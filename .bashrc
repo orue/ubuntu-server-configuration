@@ -82,6 +82,7 @@ fi
 # ============================================================================
 # ALIASES - SYSTEM
 # ============================================================================
+alias reload='source ~/.bashrc'
 alias ll='ls -lAh --color=auto'
 alias la='ls -A --color=auto'
 alias l='ls -CF --color=auto'
