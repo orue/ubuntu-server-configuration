@@ -349,6 +349,9 @@ export EDITOR=vim
 export VISUAL=vim
 export PAGER=less
 
+# Disable Python venv from modifying prompt (we handle it in PS1)
+export VIRTUAL_ENV_DISABLE_PROMPT=1
+
 # Colored man pages
 export LESS_TERMCAP_mb=$'\e[1;32m'
 export LESS_TERMCAP_md=$'\e[1;32m'
