@@ -465,31 +465,36 @@ show_welcome() {
         fi
     fi
 
+    # Check for pending updates (optimized for auto-update environment)
+    check_updates_info() {
+        if command -v apt >/dev/null 2>&1; then
+            local updates_available=0
+            local security_updates=0
+
+            # Use the update-notifier cache (updated by unattended-upgrades)
+            if [ -f /var/lib/update-notifier/updates-available ]; then
+                local updates=$(cat /var/lib/update-notifier/updates-available 2>/dev/null | head -2)
+                if [ -n "$updates" ]; then
+                    updates_available=$(echo "$updates" | grep -oP '\d+(?= (package|packages) can be updated)' | head -1)
+                    security_updates=$(echo "$updates" | grep -oP '\d+(?= (update is|updates are) security updates)' | head -1)
+                fi
+            fi
+
+            # Only show if there ARE updates pending
+            if [ "${updates_available:-0}" -gt 0 ] 2>/dev/null; then
+                echo -e "${C_BOLD}${C_YELLOW}📦 Pending Updates:${C_RESET}"
+                echo -e "  ${C_CYAN}• ${updates_available} package(s) pending${C_RESET}"
+                if [ "${security_updates:-0}" -gt 0 ] 2>/dev/null; then
+                    echo -e "  ${C_RED}• ${security_updates} security update(s)${C_RESET}"
+                fi
+                echo -e "  ${C_BLUE}Run 'update' to install now (or wait for auto-update)${C_RESET}"
+                echo ""
+            fi
+        fi
+    }
+
     # Check for system updates (Ubuntu/Debian)
-    if command -v apt >/dev/null 2>&1; then
-        local updates_available=0
-        local security_updates=0
-
-        # Check using update-notifier cache
-        if [ -f /var/lib/update-notifier/updates-available ]; then
-            local updates=$(cat /var/lib/update-notifier/updates-available 2>/dev/null | head -2)
-            if [ -n "$updates" ]; then
-                updates_available=$(echo "$updates" | grep -oP '\d+(?= (package|packages) can be updated)' | head -1)
-                security_updates=$(echo "$updates" | grep -oP '\d+(?= (update is|updates are) security updates)' | head -1)
-            fi
-        fi
-
-        # Display updates information if available
-        if [ "$updates_available" -gt 0 ] 2>/dev/null; then
-            echo -e "${C_BOLD}${C_YELLOW}System Updates Available:${C_RESET}"
-            echo -e "  ${C_CYAN}• ${updates_available} package(s) can be updated${C_RESET}"
-            if [ "$security_updates" -gt 0 ] 2>/dev/null; then
-                echo -e "  ${C_RED}• ${security_updates} security update(s) available${C_RESET}"
-            fi
-            echo -e "  ${C_BLUE}Run 'update' to install updates${C_RESET}"
-            echo ""
-        fi
-    fi
+    check_updates_info
 
     echo -e "${C_CYAN}═══════════════════════════════════════════════════════════════${C_RESET}"
     echo ""
