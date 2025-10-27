@@ -7,10 +7,6 @@ set nocompatible              " Disable vi compatibility
 syntax on                     " Enable syntax highlighting
 filetype plugin indent on     " Enable file type detection and smart indenting
 
-" Color Scheme
-set t_Co=256                  " Enable 256 colors
-set background=dark           " Use default colorscheme
-
 " UI & Display
 set number                    " Show line numbers
 set relativenumber            " Relative line numbers for easier navigation
