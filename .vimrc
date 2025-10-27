@@ -9,11 +9,7 @@ filetype plugin indent on     " Enable file type detection and smart indenting
 
 " Color Scheme
 set t_Co=256                  " Enable 256 colors
-set background=dark
-silent! colorscheme murphy    " Try murphy theme
-if !exists('g:colors_name')
-  colorscheme desert          " Fallback if murphy not available
-endif
+set background=dark           " Use default colorscheme
 
 " UI & Display
 set number                    " Show line numbers
