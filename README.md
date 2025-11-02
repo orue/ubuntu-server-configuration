@@ -182,6 +182,7 @@ sudo systemctl restart ssh
 The included dotfiles provide a lightweight, minimalist configuration designed to streamline everyday server administration and development tasks:
 
 - **`.bashrc`** - Custom bash aliases, functions, and prompt configuration
+  - Includes the `svim` alias (`sudo -E nvim`) for editing system files with your personal nvim configuration preserved
 - **`.vimrc`** - Vim editor settings and keybindings
 - **`.gitconfig`** - Pre-configured Git settings with useful aliases and defaults
 

@@ -8,6 +8,8 @@ Complete reference guide for all aliases defined in `.bashrc`
 
 | Alias | Command | Description |
 |-------|---------|-------------|
+| `reload` | `source ~/.bashrc` | Reload bash configuration |
+| `cls` | `clear` | Clear the terminal screen (Windows-style shortcut) |
 | `ll` | `ls -lAh --color=auto` | Long format list with human-readable sizes |
 | `la` | `ls -A --color=auto` | List all files except . and .. |
 | `l` | `ls -CF --color=auto` | List in columns with file type indicators |
@@ -81,6 +83,31 @@ Complete reference guide for all aliases defined in `.bashrc`
 | `cp` | `cp -i` | Copy with confirmation |
 | `mv` | `mv -i` | Move with confirmation |
 | `path` | `echo -e ${PATH//:/\\n}` | Display PATH one entry per line |
+
+---
+
+## Editor Aliases
+
+| Alias | Command | Description |
+|-------|---------|-------------|
+| `svim` | `sudo -E nvim` | Edit files as root while preserving your user environment and nvim configuration |
+
+**Why use `sudo -E`?**
+
+The `-E` flag preserves your user environment variables when running commands as root. This is particularly important for nvim/vim because:
+
+- **Preserves your configuration**: Uses your personal vim/nvim configuration (`~/.vimrc` or `~/.config/nvim`) instead of root's
+- **Keeps your plugins**: All your installed vim/nvim plugins remain available when editing as root
+- **Maintains your settings**: Your custom keybindings, colorschemes, and editor preferences are preserved
+- **Consistent experience**: Editing system files feels the same as editing regular files
+
+Without `-E`, running `sudo nvim` would use root's environment and configuration, giving you a different (often minimal) editing experience.
+
+**Example usage:**
+```bash
+svim /etc/ssh/sshd_config    # Edit SSH config with your full nvim setup
+svim /etc/hosts              # Edit hosts file with your plugins and settings
+```
 
 ---
 
