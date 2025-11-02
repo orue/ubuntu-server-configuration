@@ -182,7 +182,7 @@ sudo systemctl restart ssh
 The included dotfiles provide a lightweight, minimalist configuration designed to streamline everyday server administration and development tasks:
 
 - **`.bashrc`** - Custom bash aliases, functions, and prompt configuration
-  - Includes the `svim` alias (`sudo -E nvim`) for editing system files with your personal nvim configuration preserved
+  - Includes the `svim` alias (`sudo -E vim`) for editing system files with your personal nvim configuration preserved
 - **`.vimrc`** - Vim editor settings and keybindings
 - **`.gitconfig`** - Pre-configured Git settings with useful aliases and defaults
 
@@ -197,6 +197,7 @@ curl -sSL https://raw.githubusercontent.com/orue/ubuntu-server-configuration/mai
 ```
 
 The script will:
+
 - Backup your existing `.bashrc`, `.vimrc`, and `.gitconfig` files to `~/.dotfiles_backup/`
 - Keep only the last 3 versions of each file
 - Download and install the new dotfiles

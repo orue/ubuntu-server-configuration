@@ -151,7 +151,7 @@ alias path='echo -e ${PATH//:/\\n}'
 # The -E flag preserves user environment variables, allowing nvim to use
 # your personal configuration (~/.vimrc or ~/.config/nvim) and plugins
 # when editing files as root, instead of using root's configuration
-alias svim='sudo -E nvim'
+alias svim='sudo -E vim'
 
 # ============================================================================
 # ALIASES - LOGS
